@@ -1,0 +1,130 @@
+---
+title: "Assignment_2"
+author: "Tirumal Achina"
+date: "2023-10-02"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+***
+# Summary:
+Here our goal is to minimize the total storage and production cost of jet engines per unit.
+So,The objective function is "Minimizing the cost". 
+
+-This is a A linear program that has nine limit values and 20 decision variables. 
+
+-In view of the fact that one month 1 limit is about 10 engines, there was a maximum cumulative production in Month 1 of only ten units.
+
+-For the purpose of meeting constraint number 2, 25 engines will need to be installed by end of month two. In order to meet this limitation, a minimum of 50 engines shall be produced at monthly level in the third month. In order to meet this restriction, no more than 70 engines shall be produced in the fourth month.
+
+To represent this as a linear programming optimization model, we can take the following.
+Let,
+
+xij = no of jet engines produced in month i and installed in month j.
+
+As our objective is to minimize:
+∑  ∑ (production cost in month i) * xij + ∑ ∑ (storage cost) * xij
+i  j                                      i j
+
+The Objective equation becomes:
+
+minimum =  1.080 x11 + 1.095 x12 + 1.110 x13 + 1.125 x14 + 25 x21 + 1.110 x22 + 1.125 x23 + 1.140 x24 + 25 x31 + 25 x32 + 1.100 x33 + 1.115 x34 + 25 x41 + 25 x42 + 25 x43 + 1.130 x44;
+
+## Subject to constraints:
+
+-Jet engine production capacity in each month does not exceeds that month
+
+-Jet engine installation requirements in each month meets the demand of that month.
+
+-Non-negativity constraints: xij >= 0
+
+Here are our list of constraints equations:
+
+x11 + x12 + x13 + x14 + x15 = 25;
+
+x21 + x22 + x23 + x24 + x25 = 35;
+
+x31 + x32 + x33 + x34 + x35 = 30;
+
+x41 + x42 + x43 + x44 + x45 = 10;
+
+
+x11 + x21 + x31 + x41 = 10;
+
+x12 + x22 + x32 + x42 = 15;
+
+x13 + x23 + x33 + x43 = 25;
+
+x14 + x24 + x34 + x44 = 20;
+
+x15 + x25 + x35 + x45 = 30;
+
+## Optimization:
+-The model was successfully solved with an optimization result of 0, indicating that an optimal solution was found.
+-The optimal value that we found for our objective is 77.3(in Millions).
+
+## Sensitivity Analysis:
+-To understand how changes in the objective function coefficients and RHS values of constraints affect the solution, sensitivity analysis has been carried out. 
+-The results contain sensitivity information both for the objective function coefficients and RHS values of constraints.
+
+***
+
+
+
+```{r}
+#loading the library
+
+library(lpSolveAPI)
+```
+
+```{r}
+#reading the lp file
+
+tr = read.lp("Transport.lp")
+tr
+
+```
+
+#Solve Lp file. We should get the result as 0. That indicates the model is running successfully.
+```{r}
+solve(tr)
+```
+
+
+#Getting the optimal solution for the model i.e; objective function minimizing the storage and production cost.
+```{r}
+v = get.objective(tr)
+v
+```
+
+#loading the decision variables.
+```{r}
+get.variables(tr)
+
+```
+#getting the constraints in the model.
+
+```{r}
+get.constraints(tr)
+
+```
+#Sensitivity Analysis that shows till what extent does the optimal solution works.
+
+```{r}
+get.sensitivity.obj(tr)
+```  
+
+
+```{r}
+get.sensitivity.rhs(tr)
+```
+
+```{r}
+get.sensitivity.objex(tr)
+```
+
+
