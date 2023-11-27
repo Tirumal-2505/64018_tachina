@@ -1,0 +1,104 @@
+---
+title: "Assignment_4"
+author: "Tirumal Achina"
+date: "2023-11-26"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+***
+
+# Summary:
+
+- Here I took a1, a2, b1 and b2 in place of y1+, y1-, y2+, y2- respectively. I took x1 , x2, x3 for products as mentioned.I defined all the terms below.
+ 
+   a1: Positive deviation that is abundance of Employees.
+ 
+   a2: Negative deviation that is Lack of Employees.
+ 
+   b1: Positive deviation of Earnings.
+ 
+   b2: Negative deviation of Earnings.
+ 
+   x1, x2, x3 are the production rates of products Product1, Product2, Product3.
+ 
+- The primary goal i.e; maximize equation becomes:
+
+     Maximize Z = P - 6C - 3D, where
+    
+   - P = total (discounted) profit over the life of the new products.
+    
+     P = 20x1 + 15x2 + 25x3
+ 
+   - C = change (in either direction) in the current level of employment.
+     
+     C = 6a1 - 6a2
+    
+   - D = decrease (if any) in next year’s earnings from the current year’s level.
+   
+     D = 3b2
+     
+- The final equation would be:
+
+   - Maximize Z = 20x1 + 15x2 + 25x3 - 6a1 - 6a2 - 3b2.
+   
+- Now let us consider the constraints of the problem.
+  
+  - Employee factor Constraint: 6x1 + 4x2 + 5x3 - a1 + a2 = 50;
+  - Earning factor Constraint : 8x1 + 7x2 + 5x3 - b1 + b2 <= 75;
+  - Decision variables Constraint: x1, x2, x3, a1, a2, b1, b2 >= 0;(Non-Negativity)
+   
+   
+
+## Observations:
+
+- The units of combination that the company must execute in order to maximize the goal function are x1, x2, and x3.x1 and x2 cannot be created as planned, i.e. 20 units of x1 and 15 units of x2 cannot be produced because the ultimate solution is "0". However, there is a modification to x3, which is that Product 3 is the only product that the business can create, i.e. 15 units of x3 to maximum profit.
+
+- The purpose is to stabilize the employment level with the maximum number of workers limited to 50 Hundred workers, however in this situation, the business surpassed the employment levels by 25 Hundred Employees (a1), for which they would be required to pay a penalty for the excess/rise in employee count.
+
+- The purpose of b1 and b2 was to capture the rise or reduction in next year's profits from the present level, which in this case is "0" indicating that there is no gain or decrease in future year's earnings as compared to the current year. As a result, profits for the next year stay unchanged.
+
+- The profit that the corporation seeks to maximize is denoted by the objective function value, which in our case is 225 million dollars.
+
+
+***
+
+
+```{r}
+library(lpSolveAPI)
+```
+
+
+```{r}
+company <- read.lp("Goal.lp")
+company
+```
+
+
+```{r}
+employ_max <- matrix(c("Profit", "Employment Level", "Earnings Next Year",
+                       20,6,8,
+                       15,4,7,
+                       25,5,5,
+                       "Maximize","=50",">=75",
+                       "Millions of Dollars", "Hundreds of Employees", "Millions of Dollars"), ncol=6, byrow = F)
+
+colnames(employ_max) <- c("Factor","x1", "x2", "x3", "Goal", "Units")
+
+as.table(employ_max)
+```
+
+#Formulate and solve the linear programming model. What are your findings?
+```{r}
+solve(company)
+```
+```{r}
+get.objective(company)
+get.variables(company)
+```
+
+
+
+
